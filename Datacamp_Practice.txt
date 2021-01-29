@@ -1,0 +1,163 @@
+select 'DataCamp <3 SQL'
+AS result;
+
+----------
+
+SELECT COUNT(DISTINCT language)
+FROM films;
+
+-----------
+
+select * 
+from films
+where release_year = 2016
+
+----------------
+SELECT *
+FROM films
+WHERE language = 'French';
+
+// Case matters
+
+------------------
+
+Select INSTR(FIRST_NAME, BINARY'a') from Worker where FIRST_NAME = 'Amitabh';
+
+Using Binary operator will make INSTR work as the case-sensitive function
+
+-----------------
+
+Select RTRIM(FIRST_NAME) from Worker;
+LTRIM
+
+--------------
+
+Two continuous distinct can't be applied in select.
+
+select distinct(DEPARTMETNT), distinct length(DEPARTMENT) from Worker;
+
+-------------------
+
+Select REPLACE(FIRST_NAME,'a','A') from Worker;
+
+--------------------
+
+Select CONCAT(FIRST_NAME, ' ', LAST_NAME) AS 'COMPLETE_NAME' from Worker;
+
+--------------------
+
+Select * from Worker where year(JOINING_DATE) = 2014 and month(JOINING_DATE) = 2;
+
+----------------------
+
+SELECT CONCAT(FIRST_NAME, ' ', LAST_NAME)
+
+---------------------
+
+Only Odd Rows From A Table
+
+SELECT * FROM Worker WHERE MOD (WORKER_ID, 2) <> 0;
+
+---------------------
+
+MOD (WORKER_ID, 2) = 0;
+
+----------------------
+
+Table cloning
+
+SELECT * INTO WorkerClone FROM Worker;
+
+----------------------
+
+clone a table without information
+
+SELECT * INTO WorkerClone FROM Worker WHERE 1 = 0;
+
+CREATE TABLE WorkerClone LIKE Worker;
+
+----------------------
+
+Intersecting Records
+
+(SELECT * FROM Worker)
+INTERSECT
+(SELECT * FROM WorkerClone);
+
+-----------------------
+
+Records From One Table That Another Table Does Not Have
+
+SELECT * FROM Worker
+MINUS
+SELECT * FROM Title;
+
+-----------------------
+
+Current Date And Time
+
+SELECT CURDATE();
+
+SELECT NOW();
+
+------------------------
+
+SELECT * FROM Worker ORDER BY Salary DESC LIMIT 10;
+
+SELECT TOP 10 * FROM Worker ORDER BY Salary DESC;
+
+SELECT * FROM (SELECT * FROM Worker ORDER BY Salary DESC)
+WHERE ROWNUM <= 10;
+
+--------------------------
+
+SELECT Salary
+FROM Worker W1
+WHERE 4 = (
+ SELECT COUNT( DISTINCT ( W2.Salary ) )
+ FROM Worker W2
+ WHERE W2.Salary >= W1.Salary
+ );
+ 
+ 
+SELECT TOP 1 Salary
+FROM (
+ SELECT DISTINCT TOP n Salary
+ FROM Worker 
+ ORDER BY Salary DESC
+ )
+ORDER BY Salary ASC;
+
+---------------------------------------
+
+Select max(Salary) from Worker 
+where Salary not in (Select max(Salary) from Worker);
+
+---------------------------------
+
+The First 50% Records
+
+SELECT *
+FROM WORKER
+WHERE WORKER_ID <= (SELECT count(WORKER_ID)/2 from Worker);
+-----------------------------
+
+SELECT DEPARTMENT, COUNT(WORKER_ID) as 'Number of Workers' FROM Worker GROUP BY DEPARTMENT HAVING COUNT(WORKER_ID) < 5;
+
+-----------------------------
+
+SELECT t.DEPARTMENT,t.FIRST_NAME,t.Salary from(SELECT max(Salary) as TotalSalary,DEPARTMENT from 
+Worker group by DEPARTMENT) as TempNew 
+Inner Join Worker t on TempNew.DEPARTMENT=t.DEPARTMENT 
+ and TempNew.TotalSalary=t.Salary;
+ 
+------------------------------
+SQL Query To Fetch Three Min Salaries From A Table
+
+SELECT distinct Salary from worker a WHERE 3 >= (SELECT count(distinct Salary) 
+from worker b WHERE a.Salary <= b.Salary) order by a.Salary desc;
+
+-------------------------------
+
+Three Max Salaries From A Table
+
